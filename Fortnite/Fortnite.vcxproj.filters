@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{a7a0a28e-01fc-483c-9a50-57b393d94c8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cheat">
+      <UniqueIdentifier>{5f039859-4a07-47f2-9582-911923953170}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="memory.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Cheat</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Fortnite.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
