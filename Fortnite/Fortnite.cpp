@@ -1,7 +1,5 @@
 #include <Windows.h>
 #include <iostream>
-#include <thread>
-#include <chrono>
 #include "memory.h"
 #include "vector.h"
 #include "Offsets.h"
@@ -63,7 +61,7 @@ DWORD Fov()
 DWORD Attack()
 {
 	app.Write<DWORD>(client + dwForceAttack, 6);
-	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	Sleep(1);
 	app.Write<DWORD>(client + dwForceAttack, 4);
 	return 0;
 }
@@ -333,7 +331,7 @@ int main()
 	std::cout << "Client.dll --> " << "0x" << client << std::endl;
 	std::cout << "Engine.dll --> " << "0x" << engine << std::endl;
 
-	while (LocalPlayer() == NULL)
+	while (!LocalPlayer())
 	{
 		Sleep(100);
 	}
@@ -374,10 +372,10 @@ int main()
 		}
 		else
 		{
-			std::this_thread::sleep_for(std::chrono::seconds(5));
+			Sleep(5000);
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		Sleep(1);
 
 		if (!app.GetModuleAddress("client.dll"))
 			break;

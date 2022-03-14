@@ -6,3 +6,11 @@
 *.iobj
 *.obj
 *.pdb
+*.tlog
+*.db-wal
+*.db-shm
+*.opendb
+*.tlog
+*.tlog
+Fortnite/Release/Fortnite.tlog/CL.read.1.tlog
+.vs/Fortnite/v17/.suo
