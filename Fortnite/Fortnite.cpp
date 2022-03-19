@@ -43,9 +43,9 @@ DWORD LocalTeam()
 	return app.Read<DWORD>(LocalPlayer() + m_iTeamNum);
 }
 
-DWORD Flags(DWORD player)
+DWORD Flags(DWORD varient)
 {
-	return app.Read<DWORD>(player + m_fFlags);
+	return app.Read<DWORD>(varient + m_fFlags);
 }
 
 DWORD CrosshairID()
@@ -71,14 +71,24 @@ Vector3 AimPunch()
 	return app.Read<Vector3>(LocalPlayer() + m_aimPunchAngle) * 2;
 }
 
-DWORD Health(DWORD player)
+DWORD Health(DWORD varient)
 {
-	return app.Read<DWORD>(player + m_iHealth);
+	return app.Read<DWORD>(varient + m_iHealth);
 }
 
 DWORD ClientState()
 {
 	return app.Read<DWORD>(engine + dwClientState);
+}
+
+DWORD GlowObject()
+{
+	return app.Read<DWORD>(client + dwGlowObjectManager);
+}
+
+DWORD GlowIndex(DWORD varient)
+{
+	return app.Read<DWORD>(Player(varient) + m_iGlowIndex);
 }
 
 Vector3 ViewAngles()
@@ -111,12 +121,17 @@ void Bhop()
 
 bool Trigger()
 {
+	static int time = 0;
+	//static int return_time = 0;
+
 
 	if (!GetAsyncKeyState(VK_XBUTTON1) & 1)
 		return false;
 
 	if (!LocalPlayer())
 		return false;
+
+	
 
 	for (int i = 0; i < 32; i++)
 	{
@@ -125,13 +140,28 @@ bool Trigger()
 
 		if (crosshair != 0 && crosshair < 64)
 		{
+			time++;
+
 			if (PlayerTeam(crosshair - 1) == LocalTeam())
 				continue;
 
-			Attack();
+			if (time >= 1)
+			{
+				Attack();
+				time = 0;
+			}
 		}
-		
 	}
+
+	//if (return_time >= 70)
+	//{
+	//	return_time = 0;
+	//	time = 0;
+	//}
+	//else
+	//{
+	//	return_time++;
+	//}
 
 	return true;
 }
@@ -259,6 +289,66 @@ bool AntiFlash()
 	}
 }
 
+void Glow()
+{
+	static bool work = false;
+
+	if (!LocalPlayer())
+		return;
+	
+	if (GetAsyncKeyState(VK_F4) & 1)
+	{
+		work = !work;
+		Menu_update = true;
+	}
+
+	if (work)
+	{
+		//m_iGlowIndex
+		//dwGlowObjectManager
+
+		for (int i = 0; i != 32; i++)
+		{
+			if (PlayerTeam(i) == LocalTeam())
+				continue;
+
+			DWORD Player_temp = Player(i);
+
+			app.Write<DWORD>(GlowObject() + (GlowIndex(i)*38) + 0x4, 1);
+			app.Write<DWORD>(GlowObject() + (GlowIndex(i)*38) + 0x8, 0);
+			app.Write<DWORD>(GlowObject() + (GlowIndex(i)*38) + 0xC, 0);
+			app.Write<DWORD>(GlowObject() + (GlowIndex(i)*38) + 0x14, 1);
+		}
+	}
+}
+
+//void SkinChanger()
+//{
+//
+//	m_nFallbackPaintKit;
+//	m_nFallbackSeed;
+//	m_nFallbackStatTrak;
+//	m_hActiveWeapon;
+//	m_hMyWeapons;
+//
+//	//if (!LocalPlayer())
+//	//	return;
+//
+//	DWORD My_weapons = app.Read<DWORD>(LocalPlayer() + m_hMyWeapons);
+//
+//	for (int i = 0; i != 3; i++)
+//	{
+//		DWORD Active_Weapon = app.Read<DWORD>(LocalPlayer() + m_hActiveWeapon);
+//
+//		if (My_weapons == Active_Weapon)
+//		{
+//			app.Write<DWORD>(i);
+//			
+//		}
+//	}
+//	
+//}
+
 void Menu()
 {
 	if (!Menu_update)
@@ -298,6 +388,19 @@ void Reset()
 
 //-------------------
 
+void KillSteam()
+{
+	system("taskkill /f /im steamservice.exe");
+	Clear();
+}
+
+void KillSteamProcesses()
+{
+	system("taskkill /f /im steamwebhelper.exe");
+	system("taskkill /f /im GameOverlayUI.exe");
+	Clear();
+}
+
 void Find_CSGO()
 {
 	while (!client)
@@ -312,10 +415,23 @@ void Find_CSGO()
 		std::cout << "Waiting csgo..." << std::endl;
 		Sleep(500);
 		Clear();
+
+		KillSteam();
+		KillSteamProcesses();
+		
 		app = Memory{ "csgo.exe" };
 		client = app.GetModuleAddress("client.dll");
 		engine = app.GetModuleAddress("engine.dll");
 	}
+}
+
+void Draw_Setup()
+{
+	Clear();
+	std::cout << "--> External By S0nic <-- " << "\n\n";
+
+	std::cout << "Client.dll --> " << "0x" << client << "\n";
+	std::cout << "Engine.dll --> " << "0x" << engine << "\n";
 }
 
 int main()
@@ -324,26 +440,24 @@ int main()
 
 	Find_CSGO();
 
+	KillSteam();
+	KillSteamProcesses();
+	
 	SetConsoleTitleA("External By S0nic");
 
-	std::cout << "--> External By S0nic <-- " << std::endl << std::endl;
+	Draw_Setup();
 
-	std::cout << "Client.dll --> " << "0x" << client << std::endl;
-	std::cout << "Engine.dll --> " << "0x" << engine << std::endl;
+	Sleep(1000);
 
-	while (!LocalPlayer())
-	{
-		Sleep(100);
-	}
-
-	Reset();
-
-	Sleep(2000);
+	if (LocalPlayer())
+		Reset();
 
 	Menu_update = true;
 	Menu();
 
-	while (!GetAsyncKeyState(VK_END))
+	int loop_time = 0;
+
+	while (!GetAsyncKeyState(VK_END) && app.GetModuleAddress("client.dll"))
 	{
 
 		if (GetAsyncKeyState(VK_INSERT) & 1)
@@ -369,6 +483,8 @@ int main()
 			Trigger();
 			AutoFire();
 			AntiFlash();
+			//Glow();
+			//SkinChanger();
 		}
 		else
 		{
@@ -377,11 +493,19 @@ int main()
 
 		Sleep(1);
 
-		if (!app.GetModuleAddress("client.dll"))
-			break;
+		if (loop_time >= 1000)
+		{
+			KillSteam();
+			Menu_update = true;
+			Menu();
+			loop_time = 0;
+		}
 
+		loop_time++;
 	}
 
 	Reset();
 
+	KillSteam();
+	KillSteamProcesses();
 }

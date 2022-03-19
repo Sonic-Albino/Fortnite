@@ -1,17 +1,7 @@
 #pragma once
-
 #include <Windows.h>
 
-DWORD cs_gamerules_data = 0x0;
-DWORD m_ArmorValue = 0x117CC;
-DWORD m_Collision = 0x320;
-DWORD m_CollisionGroup = 0x474;
 DWORD m_Local = 0x2FCC;
-DWORD m_MoveType = 0x25C;
-DWORD m_OriginalOwnerXuidHigh = 0x31D4;
-DWORD m_OriginalOwnerXuidLow = 0x31D0;
-DWORD m_SurvivalGameRuleDecisionTypes = 0x1328;
-DWORD m_SurvivalRules = 0xD00;
 DWORD m_aimPunchAngle = 0x303C;
 DWORD m_aimPunchAngleVel = 0x3048;
 DWORD m_angEyeAnglesX = 0x117D0;
@@ -34,7 +24,6 @@ DWORD m_bStartedArming = 0x3400;
 DWORD m_bUseCustomAutoExposureMax = 0x9D9;
 DWORD m_bUseCustomAutoExposureMin = 0x9D8;
 DWORD m_bUseCustomBloomScale = 0x9DA;
-DWORD m_clrRender = 0x70;
 DWORD m_dwBoneMatrix = 0x26A8;
 DWORD m_fAccuracyPenalty = 0x3340;
 DWORD m_fFlags = 0x104;
@@ -53,9 +42,9 @@ DWORD m_flNextAttack = 0x2D80;
 DWORD m_flNextPrimaryAttack = 0x3248;
 DWORD m_flSimulationTime = 0x268;
 DWORD m_flTimerLength = 0x29A4;
-DWORD m_hActiveWeapon = 0x2F08;
+DWORD m_hActiveWeapon = 0x2F08;//Skin
 DWORD m_hBombDefuser = 0x29C4;
-DWORD m_hMyWeapons = 0x2E08;
+DWORD m_hMyWeapons = 0x2E08;//Skin
 DWORD m_hObserverTarget = 0x339C;
 DWORD m_hOwner = 0x29DC;
 DWORD m_hOwnerEntity = 0x14C;
@@ -80,9 +69,9 @@ DWORD m_iState = 0x3268;
 DWORD m_iTeamNum = 0xF4;
 DWORD m_lifeState = 0x25F;
 DWORD m_nBombSite = 0x2994;
-DWORD m_nFallbackPaintKit = 0x31D8;
-DWORD m_nFallbackSeed = 0x31DC;
-DWORD m_nFallbackStatTrak = 0x31E4;
+DWORD m_nFallbackPaintKit = 0x31D8;//Skin
+DWORD m_nFallbackSeed = 0x31DC;	   //Skin
+DWORD m_nFallbackStatTrak = 0x31E4;//Skin
 DWORD m_nForceBone = 0x268C;
 DWORD m_nTickBase = 0x3440;
 DWORD m_nViewModelIndex = 0x29D0;
