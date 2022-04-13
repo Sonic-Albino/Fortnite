@@ -436,7 +436,7 @@ void Draw_Setup()
 
 int main()
 {
-	SetConsoleTitleA("--> Start as admin <--");
+	SetConsoleTitleA("Fortnite V1.1");
 
 	Find_CSGO();
 
@@ -453,6 +453,7 @@ int main()
 		Reset();
 
 	Menu_update = true;
+	Sleep(100);
 	Menu();
 
 	int loop_time = 0;
